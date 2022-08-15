@@ -1,0 +1,1 @@
+export { useZxing } from "./useZxing";
