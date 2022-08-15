@@ -1,9 +1,10 @@
 import {
   BrowserMultiFormatReader,
+  DecodeContinuouslyCallback,
   DecodeHintType,
   Result,
 } from "@zxing/library";
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 export interface UseZxingOptions {
   hints?: Map<DecodeHintType, any>;
@@ -33,16 +34,21 @@ export const useZxing = ({
     return instance;
   }, [hints, timeBetweenDecodingAttempts]);
 
-  useEffect(() => {
-    if (!ref.current) return;
-    reader.decodeFromConstraints(constraints, ref.current, (result, error) => {
+  const decodeCallback = useCallback<DecodeContinuouslyCallback>(
+    (result, error) => {
       if (result) onResult(result);
       if (error) onError(error);
-    });
+    },
+    [onResult, onError]
+  );
+
+  useEffect(() => {
+    if (!ref.current) return;
+    reader.decodeFromConstraints(constraints, ref.current, decodeCallback);
     return () => {
       reader.reset();
     };
-  }, [ref, reader]);
+  }, [ref, reader, constraints, decodeCallback]);
 
   return { ref };
 };
