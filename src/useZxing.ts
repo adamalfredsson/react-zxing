@@ -1,17 +1,11 @@
 import {
-  BrowserMultiFormatReader,
   DecodeContinuouslyCallback,
   DecodeHintType,
   Result,
 } from "@zxing/library";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-
-const DEFAULT_CONSTRAINTS: MediaStreamConstraints = {
-  audio: false,
-  video: { facingMode: "environment" },
-};
-
-const DEFAULT_TIME_BETWEEN_SCANS_MS = 300;
+import { useCallback, useEffect, useRef } from "react";
+import { DEFAULT_CONSTRAINTS } from "./constants";
+import { useBrowserMultiFormatReader } from "./useBrowserMultiFormatReader";
 
 export interface UseZxingOptions {
   hints?: Map<DecodeHintType, any>;
@@ -39,17 +33,16 @@ export const useZxing = (
 ) => {
   const {
     hints,
-    timeBetweenDecodingAttempts = DEFAULT_TIME_BETWEEN_SCANS_MS,
+    timeBetweenDecodingAttempts,
     onResult = () => {},
     onError = () => {},
   } = options;
   const ref = useRef<HTMLVideoElement>(null);
 
-  const reader = useMemo<BrowserMultiFormatReader>(() => {
-    const instance = new BrowserMultiFormatReader(hints);
-    instance.timeBetweenDecodingAttempts = timeBetweenDecodingAttempts;
-    return instance;
-  }, [hints, timeBetweenDecodingAttempts]);
+  const reader = useBrowserMultiFormatReader({
+    hints,
+    timeBetweenDecodingAttempts,
+  });
 
   const decodeCallback = useCallback<DecodeContinuouslyCallback>(
     (result, error) => {
@@ -81,5 +74,5 @@ export const useZxing = (
     };
   }, [startDecoding, stopDecoding]);
 
-  return { ref };
+  return { ref, start: startDecoding, stop: stopDecoding };
 };
