@@ -6,26 +6,43 @@ import {
 } from "@zxing/library";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
+const DEFAULT_CONSTRAINTS: MediaStreamConstraints = {
+  audio: false,
+  video: { facingMode: "environment" },
+};
+
+const DEFAULT_TIME_BETWEEN_SCANS_MS = 300;
+
 export interface UseZxingOptions {
   hints?: Map<DecodeHintType, any>;
-  constraints?: MediaStreamConstraints;
   timeBetweenDecodingAttempts?: number;
   onResult?: (result: Result) => void;
   onError?: (error: Error) => void;
 }
 
-export const useZxing = ({
-  constraints = {
-    audio: false,
-    video: {
-      facingMode: "environment",
-    },
-  },
-  hints,
-  timeBetweenDecodingAttempts = 300,
-  onResult = () => {},
-  onError = () => {},
-}: UseZxingOptions = {}) => {
+export interface UseZxingOptionsWithConstraints extends UseZxingOptions {
+  constraints?: MediaStreamConstraints;
+}
+
+export interface UseZxingOptionsWithDeviceId extends UseZxingOptions {
+  deviceId: string;
+}
+
+function isUseZxingOptionsWithDeviceId(
+  options: UseZxingOptions
+): options is UseZxingOptionsWithDeviceId {
+  return (options as UseZxingOptionsWithDeviceId).deviceId !== undefined;
+}
+
+export const useZxing = (
+  options: UseZxingOptionsWithConstraints | UseZxingOptionsWithDeviceId = {}
+) => {
+  const {
+    hints,
+    timeBetweenDecodingAttempts = DEFAULT_TIME_BETWEEN_SCANS_MS,
+    onResult = () => {},
+    onError = () => {},
+  } = options;
   const ref = useRef<HTMLVideoElement>(null);
 
   const reader = useMemo<BrowserMultiFormatReader>(() => {
@@ -42,13 +59,27 @@ export const useZxing = ({
     [onResult, onError]
   );
 
-  useEffect(() => {
+  const startDecoding = useCallback(() => {
     if (!ref.current) return;
-    reader.decodeFromConstraints(constraints, ref.current, decodeCallback);
+    if (isUseZxingOptionsWithDeviceId(options)) {
+      const { deviceId } = options;
+      reader.decodeFromVideoDevice(deviceId, ref.current, decodeCallback);
+    } else {
+      const constraints = options.constraints ?? DEFAULT_CONSTRAINTS;
+      reader.decodeFromConstraints(constraints, ref.current, decodeCallback);
+    }
+  }, [reader, options, decodeCallback]);
+
+  const stopDecoding = useCallback(() => {
+    reader.reset();
+  }, [reader]);
+
+  useEffect(() => {
+    startDecoding();
     return () => {
-      reader.reset();
+      stopDecoding();
     };
-  }, [ref, reader, constraints, decodeCallback]);
+  }, [startDecoding, stopDecoding]);
 
   return { ref };
 };
