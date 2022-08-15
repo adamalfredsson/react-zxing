@@ -1,0 +1,15 @@
+{
+  "name": "react-zxing",
+  "version": "1.0.0",
+  "description": "Integrate zxing to your React application using a custom hook",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "yarn build:esm && yarn build:cjs",
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module commonjs --outDir lib/cjs"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}
