@@ -2,6 +2,12 @@
   "name": "react-zxing",
   "version": "1.0.0",
   "description": "Integrate zxing to your React application using a custom hook",
+  "license": "MIT",
+  "author": {
+    "name": "Adam Alfredsson",
+    "email": "adam@zodiapps.com",
+    "url": "https://zodiapps.com/"
+  },
   "main": "lib/index.js",
   "module": "lib/index.esm.js",
   "types": "lib/index.d.ts",
