@@ -8,6 +8,24 @@
     "email": "adam@zodiapps.com",
     "url": "https://zodiapps.com/"
   },
+  "homepage": "https://github.com/nomadoda/react-zxing",
+  "keywords": [
+    "react",
+    "zxing",
+    "react-zxing",
+    "barcode",
+    "barcode-scanner",
+    "qrcode",
+    "qrcode-scanner"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nomadoda/react-zxing.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nomadoda/react-zxing/issues",
+    "email": "adam@zodiapps.com"
+  },
   "main": "lib/index.js",
   "module": "lib/index.esm.js",
   "types": "lib/index.d.ts",
