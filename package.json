@@ -11,8 +11,8 @@
   ],
   "scripts": {
     "build": "yarn clean && rollup -c",
-    "build:esm": "tsc",
-    "build:cjs": "tsc --module commonjs --outDir lib/cjs",
+    "lint": "eslint \"{src,example}/**/*.{ts,tsx}\"",
+    "lint:fix": "yarn lint --fix",
     "clean": "rimraf lib",
     "format": "prettier --write --ignore-path .gitignore .",
     "prepare": "husky install"
@@ -26,6 +26,9 @@
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
+    "eslint": "^8.22.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-react-app": "^7.0.1",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
@@ -41,6 +44,11 @@
     "@zxing/library": "^0.19.1"
   },
   "lint-staged": {
-    "*.{tsx,ts,jsx,js,json,md}": "yarn format"
+    "*.{tsx,ts,jsx,js}": [
+      "yarn lint:fix"
+    ],
+    "*.{tsx,ts,jsx,js,json,md}": [
+      "yarn format"
+    ]
   }
 }
