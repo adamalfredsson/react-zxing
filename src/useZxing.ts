@@ -5,7 +5,7 @@ import {
 } from "@zxing/library";
 import { useEffect, useMemo, useRef } from "react";
 
-interface UseZxingOptions {
+export interface UseZxingOptions {
   hints?: Map<DecodeHintType, any>;
   constraints?: MediaStreamConstraints;
   timeBetweenDecodingAttempts?: number;

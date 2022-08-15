@@ -1,4 +1,4 @@
 node_modules/
 lib/
-/example/node_modules
-/example/build
+/example/node_modules/
+/example/build/
