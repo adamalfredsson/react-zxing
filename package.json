@@ -13,7 +13,9 @@
     "build": "yarn clean && rollup -c",
     "build:esm": "tsc",
     "build:cjs": "tsc --module commonjs --outDir lib/cjs",
-    "clean": "rimraf lib"
+    "clean": "rimraf lib",
+    "format": "prettier --write --ignore-path .gitignore .",
+    "prepare": "husky install"
   },
   "peerDependencies": {
     "react": "^16.8.0  || ^17.0.0 || ^18.0.0",
@@ -24,6 +26,9 @@
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
@@ -34,5 +39,8 @@
   },
   "dependencies": {
     "@zxing/library": "^0.19.1"
+  },
+  "lint-staged": {
+    "*.{tsx,ts,jsx,js,json,md}": "yarn format"
   }
 }
