@@ -1,6 +1,6 @@
 import { BrowserMultiFormatReader, DecodeHintType } from "@zxing/library";
 import { useMemo } from "react";
-import { DEFAULT_TIME_BETWEEN_SCANS_MS } from "./constants";
+import { DEFAULT_TIME_BETWEEN_DECODING_ATTEMPTS } from "./constants";
 
 interface UseBrowserMultiFormatReaderOptions {
   hints?: Map<DecodeHintType, any>;
@@ -8,7 +8,7 @@ interface UseBrowserMultiFormatReaderOptions {
 }
 
 export const useBrowserMultiFormatReader = ({
-  timeBetweenDecodingAttempts = DEFAULT_TIME_BETWEEN_SCANS_MS,
+  timeBetweenDecodingAttempts = DEFAULT_TIME_BETWEEN_DECODING_ATTEMPTS,
   hints,
 }: UseBrowserMultiFormatReaderOptions = {}) => {
   return useMemo<BrowserMultiFormatReader>(() => {

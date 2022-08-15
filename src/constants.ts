@@ -3,4 +3,4 @@ export const DEFAULT_CONSTRAINTS: MediaStreamConstraints = {
   video: { facingMode: "environment" },
 };
 
-export const DEFAULT_TIME_BETWEEN_SCANS_MS = 300;
+export const DEFAULT_TIME_BETWEEN_DECODING_ATTEMPTS = 300;
