@@ -1,6 +1,6 @@
 {
   "name": "react-zxing",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Integrate zxing to your React application using a custom hook",
   "license": "MIT",
   "author": {
@@ -26,15 +26,17 @@
     "url": "https://github.com/nomadoda/react-zxing/issues",
     "email": "adam@zodiapps.com"
   },
-  "main": "lib/index.js",
-  "module": "lib/index.esm.js",
-  "types": "lib/index.d.ts",
-  "typings": "lib/index.d.ts",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/esm/index.d.ts",
+  "typings": "./lib/esm/index.d.ts",
   "files": [
     "/lib"
   ],
   "scripts": {
-    "build": "yarn clean && rollup -c",
+    "build": "yarn clean && yarn build:esm && yarn build:cjs",
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module commonjs --outDir lib/cjs",
     "lint": "eslint \"{src,example}/**/*.{ts,tsx}\"",
     "lint:fix": "yarn lint --fix",
     "clean": "rimraf lib",
@@ -46,8 +48,6 @@
     "react-dom": "^16.8.0  || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.2",
-    "@rollup/plugin-node-resolve": "^13.3.0",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "eslint": "^8.22.0",
@@ -59,9 +59,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.78.0",
-    "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-typescript2": "^0.32.1",
     "typescript": "^4.7.4"
   },
   "dependencies": {
