@@ -3,9 +3,10 @@ import {
   DecodeHintType,
   Result,
 } from "@zxing/library";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { DEFAULT_CONSTRAINTS } from "./constants";
 import { useBrowserMultiFormatReader } from "./useBrowserMultiFormatReader";
+import { deepCompareObjects } from "./utils";
 
 export interface UseZxingOptions {
   hints?: Map<DecodeHintType, any>;
@@ -37,6 +38,14 @@ export const useZxing = (
     onResult = () => {},
     onError = () => {},
   } = options;
+  const deviceId = isUseZxingOptionsWithDeviceId(options)
+    ? options.deviceId
+    : undefined;
+  const [constraints, setConstraints] = useState(
+    isUseZxingOptionsWithDeviceId(options) ? undefined : options.constraints
+  );
+  const resultHandlerRef = useRef(onResult);
+  const errorHandlerRef = useRef(onError);
   const ref = useRef<HTMLVideoElement>(null);
 
   const reader = useBrowserMultiFormatReader({
@@ -46,26 +55,47 @@ export const useZxing = (
 
   const decodeCallback = useCallback<DecodeContinuouslyCallback>(
     (result, error) => {
-      if (result) onResult(result);
-      if (error) onError(error);
+      if (result) resultHandlerRef.current(result);
+      if (error) errorHandlerRef.current(error);
     },
-    [onResult, onError]
+    []
   );
 
   const startDecoding = useCallback(() => {
     if (!ref.current) return;
-    if (isUseZxingOptionsWithDeviceId(options)) {
-      const { deviceId } = options;
+    if (deviceId) {
       reader.decodeFromVideoDevice(deviceId, ref.current, decodeCallback);
     } else {
-      const constraints = options.constraints ?? DEFAULT_CONSTRAINTS;
-      reader.decodeFromConstraints(constraints, ref.current, decodeCallback);
+      reader.decodeFromConstraints(
+        constraints ?? DEFAULT_CONSTRAINTS,
+        ref.current,
+        decodeCallback
+      );
     }
-  }, [reader, options, decodeCallback]);
+  }, [reader, deviceId, constraints, decodeCallback]);
 
   const stopDecoding = useCallback(() => {
     reader.reset();
   }, [reader]);
+
+  useEffect(() => {
+    resultHandlerRef.current = onResult;
+  }, [onResult]);
+
+  useEffect(() => {
+    errorHandlerRef.current = onError;
+  }, [onError]);
+
+  useEffect(() => {
+    const isConstraintsValueSame = deepCompareObjects(
+      constraints,
+      (options as UseZxingOptionsWithConstraints).constraints
+    );
+    console.log(isConstraintsValueSame);
+    if (!isConstraintsValueSame) {
+      setConstraints((options as UseZxingOptionsWithConstraints).constraints);
+    }
+  }, [constraints, options, setConstraints]);
 
   useEffect(() => {
     startDecoding();
