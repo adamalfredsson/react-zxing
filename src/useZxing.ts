@@ -91,7 +91,6 @@ export const useZxing = (
       constraints,
       (options as UseZxingOptionsWithConstraints).constraints
     );
-    console.log(isConstraintsValueSame);
     if (!isConstraintsValueSame) {
       setConstraints((options as UseZxingOptionsWithConstraints).constraints);
     }
