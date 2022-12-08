@@ -56,8 +56,10 @@ const constraints: MediaStreamConstraints = {
 
 export const BarcodeScanner = () => {
   const { devices } = useMediaDevices(constraints);
+  const deviceId = devices?.[0]?.deviceId;
   const { ref } = useZxing({
-    deviceId: devices[0].deviceId,
+    paused: !deviceId,
+    deviceId,
   });
 
   return <video ref={ref} />;
@@ -113,12 +115,12 @@ export const BarcodeScanner = () => {
       </td>
     </tr>
     <tr>
-    <td>constraints</td>
-    <td>MediaStreamConstraints</td>
-    <td>{ video: { facingMode: 'environment' }, audio: false }</td>
-    <td>
-      The constraints to use when requesting the camera stream.
-    </td>
+      <td>constraints</td>
+      <td>MediaStreamConstraints</td>
+      <td>{ video: { facingMode: 'environment' }, audio: false }</td>
+      <td>
+        The constraints to use when requesting the camera stream.
+      </td>
     </tr>
     <tr>
       <td>deviceId</td>
@@ -127,5 +129,14 @@ export const BarcodeScanner = () => {
       <td>
         You may pass an explicit device ID to stream from.
       </td>
+    </tr>
+    <tr>
+      <td>paused</td>
+      <td>boolean</td>
+      <td>false</td>
+      <td>
+        Stops the camera stream when true.
+      </td>
+    </tr>
   </tbody>
 </table>
