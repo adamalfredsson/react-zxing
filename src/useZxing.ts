@@ -9,6 +9,7 @@ import { useBrowserMultiFormatReader } from "./useBrowserMultiFormatReader";
 import { deepCompareObjects } from "./utils";
 
 export interface UseZxingOptions {
+  paused?: boolean;
   hints?: Map<DecodeHintType, any>;
   timeBetweenDecodingAttempts?: number;
   onResult?: (result: Result) => void;
@@ -33,6 +34,7 @@ export const useZxing = (
   options: UseZxingOptionsWithConstraints | UseZxingOptionsWithDeviceId = {}
 ) => {
   const {
+    paused = false,
     hints,
     timeBetweenDecodingAttempts,
     onResult = () => {},
@@ -63,6 +65,7 @@ export const useZxing = (
 
   const startDecoding = useCallback(() => {
     if (!ref.current) return;
+    if (paused) return;
     if (deviceId) {
       reader.decodeFromVideoDevice(deviceId, ref.current, decodeCallback);
     } else {
@@ -72,7 +75,7 @@ export const useZxing = (
         decodeCallback
       );
     }
-  }, [reader, deviceId, constraints, decodeCallback]);
+  }, [reader, deviceId, constraints, paused, decodeCallback]);
 
   const stopDecoding = useCallback(() => {
     reader.reset();
