@@ -6,6 +6,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DEFAULT_CONSTRAINTS } from "./constants";
 import { useBrowserMultiFormatReader } from "./useBrowserMultiFormatReader";
+import { useTorch } from "./useTorch";
 import { deepCompareObjects } from "./utils";
 
 export interface UseZxingOptions {
@@ -55,6 +56,13 @@ export const useZxing = (
     timeBetweenDecodingAttempts,
   });
 
+  const { init: torchInit, ...torch } = useTorch({
+    resetStream: async () => {
+      stopDecoding();
+      await startDecoding();
+    },
+  });
+
   const decodeCallback = useCallback<DecodeContinuouslyCallback>(
     (result, error) => {
       if (result) resultHandlerRef.current(result);
@@ -63,19 +71,22 @@ export const useZxing = (
     []
   );
 
-  const startDecoding = useCallback(() => {
+  const startDecoding = useCallback(async () => {
     if (!ref.current) return;
     if (paused) return;
     if (deviceId) {
-      reader.decodeFromVideoDevice(deviceId, ref.current, decodeCallback);
+      await reader.decodeFromVideoDevice(deviceId, ref.current, decodeCallback);
     } else {
-      reader.decodeFromConstraints(
+      await reader.decodeFromConstraints(
         constraints ?? DEFAULT_CONSTRAINTS,
         ref.current,
         decodeCallback
       );
     }
-  }, [reader, deviceId, constraints, paused, decodeCallback]);
+    const mediaStream = ref.current.srcObject as MediaStream;
+    const videoTrack = mediaStream.getVideoTracks()[0];
+    if (videoTrack) torchInit(videoTrack);
+  }, [reader, deviceId, constraints, paused, decodeCallback, torchInit]);
 
   const stopDecoding = useCallback(() => {
     reader.reset();
@@ -97,7 +108,7 @@ export const useZxing = (
     if (!isConstraintsValueSame) {
       setConstraints((options as UseZxingOptionsWithConstraints).constraints);
     }
-  }, [constraints, options, setConstraints]);
+  }, [constraints, options]);
 
   useEffect(() => {
     startDecoding();
@@ -106,5 +117,8 @@ export const useZxing = (
     };
   }, [startDecoding, stopDecoding]);
 
-  return { ref, start: startDecoding, stop: stopDecoding };
+  return {
+    ref,
+    torch,
+  };
 };
