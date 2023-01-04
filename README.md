@@ -66,6 +66,40 @@ export const BarcodeScanner = () => {
 };
 ```
 
+## Advanced Usage
+
+### Torch
+
+> ⚠️ Torch support is not available for iOS devices. See [this issue](https://github.com/zxing-js/browser/issues/12).
+
+You can control the torch by accessing the `torch` property of the `useZxing` return value:
+
+```tsx
+import { useZxing } from "react-zxing";
+
+export const BarcodeScanner = () => {
+  const {
+    ref,
+    torch: { on, off, isOn, isAvailable },
+  } = useZxing();
+
+  return (
+    <>
+      <video ref={ref} />
+      {isAvailable ? (
+        <button onClick={() => (isOn ? off() : on())}>
+          {isOn ? "Turn off" : "Turn on"} torch
+        </button>
+      ) : (
+        <strong>Unfortunately, torch is not available on this device.</strong>
+      )}
+    </>
+  );
+};
+```
+
+Torch support is limited to devices that support the `torch` constraint. You can check if torch is available by checking the `isAvailable` property.
+
 ## Options
 
 <table>
