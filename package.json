@@ -62,7 +62,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@zxing/library": "^0.19.1"
+    "@zxing/library": "^0.19.2"
   },
   "lint-staged": {
     "*.{tsx,ts,jsx,js}": [
