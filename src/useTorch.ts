@@ -16,6 +16,7 @@ export const useTorch = ({ resetStream }: UseTorchOptions) => {
       typeof videoTrack.getCapabilities === "function"
         ? (videoTrack.getCapabilities() as any).torch !== undefined
         : false
+    );
   }, []);
 
   const on = useCallback(async () => {
