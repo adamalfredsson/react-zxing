@@ -12,7 +12,9 @@ export const useTorch = ({ resetStream }: UseTorchOptions) => {
 
   const init = useCallback((videoTrack: MediaStreamTrack) => {
     videoTrackRef.current = videoTrack;
-    setIsAvailable((videoTrack.getCapabilities() as any).torch !== undefined);
+    if(typeof videoTrack.getCapabilities === 'function') {
+      setIsAvailable((videoTrack.getCapabilities() as any).torch !== undefined);
+    }
   }, []);
 
   const on = useCallback(async () => {
