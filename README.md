@@ -174,3 +174,18 @@ Torch support is limited to devices that support the `torch` constraint. You can
     </tr>
   </tbody>
 </table>
+
+## Development
+
+```sh
+# Install dependencies
+yarn
+# Build the library
+yarn build
+# Install example dependencies
+yarn --cwd example
+# Start the example
+yarn --cwd example start
+```
+
+Example should now be running on [localhost:1234](http://localhost:1234).
