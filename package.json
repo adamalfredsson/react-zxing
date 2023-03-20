@@ -71,5 +71,9 @@
     "*.{tsx,ts,jsx,js,json,md}": [
       "yarn format"
     ]
+  },
+  "engines": {
+    "node": "^16 || ^18",
+    "yarn": "^1.22"
   }
 }
