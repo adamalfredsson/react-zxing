@@ -16,7 +16,7 @@ export const BarcodeScanner: React.FC<{}> = () => {
     },
   } = useZxing({
     paused,
-    onResult(result) {
+    onDecodeResult(result) {
       setResult(result.getText());
     },
   });
