@@ -27,12 +27,6 @@ export interface UseZxingOptionsWithDeviceId extends UseZxingOptions {
   deviceId: string;
 }
 
-function isUseZxingOptionsWithDeviceId(
-  options: UseZxingOptions
-): options is UseZxingOptionsWithDeviceId {
-  return (options as UseZxingOptionsWithDeviceId).deviceId !== undefined;
-}
-
 export const useZxing = (
   options: UseZxingOptionsWithConstraints | UseZxingOptionsWithDeviceId = {}
 ) => {
@@ -44,11 +38,9 @@ export const useZxing = (
     onDecodeError = () => {},
     onError = () => {},
   } = options;
-  const deviceId = isUseZxingOptionsWithDeviceId(options)
-    ? options.deviceId
-    : undefined;
+  const deviceId = "deviceId" in options ? options.deviceId : undefined;
   const [constraints, setConstraints] = useState(
-    isUseZxingOptionsWithDeviceId(options) ? undefined : options.constraints
+    "constraints" in options ? options.constraints : undefined
   );
   const decodeResultHandlerRef = useRef(onDecodeResult);
   const decodeErrorHandlerRef = useRef(onDecodeError);
