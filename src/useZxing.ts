@@ -1,6 +1,7 @@
 import {
   DecodeContinuouslyCallback,
   DecodeHintType,
+  Exception,
   Result,
 } from "@zxing/library";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -13,8 +14,9 @@ export interface UseZxingOptions {
   paused?: boolean;
   hints?: Map<DecodeHintType, any>;
   timeBetweenDecodingAttempts?: number;
-  onResult?: (result: Result) => void;
-  onError?: (error: Error) => void;
+  onDecodeResult?: (result: Result) => void;
+  onDecodeError?: (error: Exception) => void;
+  onError?: (error: unknown) => void;
 }
 
 export interface UseZxingOptionsWithConstraints extends UseZxingOptions {
@@ -25,12 +27,6 @@ export interface UseZxingOptionsWithDeviceId extends UseZxingOptions {
   deviceId: string;
 }
 
-function isUseZxingOptionsWithDeviceId(
-  options: UseZxingOptions
-): options is UseZxingOptionsWithDeviceId {
-  return (options as UseZxingOptionsWithDeviceId).deviceId !== undefined;
-}
-
 export const useZxing = (
   options: UseZxingOptionsWithConstraints | UseZxingOptionsWithDeviceId = {}
 ) => {
@@ -38,16 +34,16 @@ export const useZxing = (
     paused = false,
     hints,
     timeBetweenDecodingAttempts,
-    onResult = () => {},
+    onDecodeResult = () => {},
+    onDecodeError = () => {},
     onError = () => {},
   } = options;
-  const deviceId = isUseZxingOptionsWithDeviceId(options)
-    ? options.deviceId
-    : undefined;
+  const deviceId = "deviceId" in options ? options.deviceId : undefined;
   const [constraints, setConstraints] = useState(
-    isUseZxingOptionsWithDeviceId(options) ? undefined : options.constraints
+    "constraints" in options ? options.constraints : undefined
   );
-  const resultHandlerRef = useRef(onResult);
+  const decodeResultHandlerRef = useRef(onDecodeResult);
+  const decodeErrorHandlerRef = useRef(onDecodeError);
   const errorHandlerRef = useRef(onError);
   const ref = useRef<HTMLVideoElement>(null);
 
@@ -65,8 +61,8 @@ export const useZxing = (
 
   const decodeCallback = useCallback<DecodeContinuouslyCallback>(
     (result, error) => {
-      if (result) resultHandlerRef.current(result);
-      if (error) errorHandlerRef.current(error);
+      if (result) decodeResultHandlerRef.current(result);
+      if (error) decodeErrorHandlerRef.current(error);
     },
     []
   );
@@ -74,15 +70,25 @@ export const useZxing = (
   const startDecoding = useCallback(async () => {
     if (!ref.current) return;
     if (paused) return;
-    if (deviceId) {
-      await reader.decodeFromVideoDevice(deviceId, ref.current, decodeCallback);
-    } else {
-      await reader.decodeFromConstraints(
-        constraints ?? DEFAULT_CONSTRAINTS,
-        ref.current,
-        decodeCallback
-      );
+    try {
+      if (deviceId) {
+        await reader.decodeFromVideoDevice(
+          deviceId,
+          ref.current,
+          decodeCallback
+        );
+      } else {
+        await reader.decodeFromConstraints(
+          constraints ?? DEFAULT_CONSTRAINTS,
+          ref.current,
+          decodeCallback
+        );
+      }
+    } catch (e: unknown) {
+      errorHandlerRef.current(e);
+      return;
     }
+
     if (!ref.current) return;
     const mediaStream = ref.current.srcObject as MediaStream;
     const videoTrack = mediaStream.getVideoTracks()[0];
@@ -94,8 +100,12 @@ export const useZxing = (
   }, [reader]);
 
   useEffect(() => {
-    resultHandlerRef.current = onResult;
-  }, [onResult]);
+    decodeResultHandlerRef.current = onDecodeResult;
+  }, [onDecodeResult]);
+
+  useEffect(() => {
+    decodeErrorHandlerRef.current = onDecodeError;
+  }, [onDecodeError]);
 
   useEffect(() => {
     errorHandlerRef.current = onError;
