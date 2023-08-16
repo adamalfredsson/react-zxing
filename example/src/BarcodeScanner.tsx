@@ -19,6 +19,14 @@ export const BarcodeScanner: React.FC<{}> = () => {
     onDecodeResult(result) {
       setResult(result.getText());
     },
+    onDecodeException(error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+    },
+    onError(error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    },
   });
 
   return (
