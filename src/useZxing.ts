@@ -83,6 +83,7 @@ export const useZxing = (
         decodeCallback
       );
     }
+    if (!ref.current) return;
     const mediaStream = ref.current.srcObject as MediaStream;
     const videoTrack = mediaStream.getVideoTracks()[0];
     if (videoTrack) torchInit(videoTrack);
