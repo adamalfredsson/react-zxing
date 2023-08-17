@@ -24,7 +24,7 @@ import { useZxing } from "react-zxing";
 export const BarcodeScanner = () => {
   const [result, setResult] = useState("");
   const { ref } = useZxing({
-    onResult(result) {
+    onDecodeResult(result) {
       setResult(result.getText());
     },
   });
@@ -113,11 +113,11 @@ Torch support is limited to devices that support the `torch` constraint. You can
   </thead>
   <tbody>
     <tr>
-      <td>onResult</td>
+      <td>onDecodeResult</td>
       <td>function</td>
       <td></td>
       <td>
-        Called when a result is found. The result is an instance of 
+        Called when a decode result is found. The result is an instance of 
         <a href="https://github.com/zxing-js/library/blob/master/src/core/Result.ts">
           Result
         </a>
@@ -125,11 +125,22 @@ Torch support is limited to devices that support the `torch` constraint. You can
       </td>
     </tr>
     <tr>
+      <td>onDecodeError</td>
+      <td>function</td>
+      <td></td>
+      <td>
+        Called when an decode error is found. The error is an instance of 
+        <a href="https://github.com/zxing-js/library/blob/master/src/core/Exception.ts">
+          Exception
+        </a>
+      </td>
+    </tr>
+    <tr>
       <td>onError</td>
       <td>function</td>
       <td></td>
       <td>
-        Called when an error is found. The error is an instance of Error.
+        Called when any other error occurs, e.g. when the camera stream cannot be accessed.
       </td>
     </tr>
     <tr>
