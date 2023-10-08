@@ -55,7 +55,7 @@ const constraints: MediaStreamConstraints = {
 };
 
 export const BarcodeScanner = () => {
-  const { devices } = useMediaDevices(constraints);
+  const { devices } = useMediaDevices({ constraints });
   const deviceId = devices?.[0]?.deviceId;
   const { ref } = useZxing({
     paused: !deviceId,
