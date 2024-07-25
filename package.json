@@ -1,6 +1,6 @@
 {
   "name": "react-zxing",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Integrate zxing to your React application using a custom hook",
   "license": "MIT",
   "author": {
