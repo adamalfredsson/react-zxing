@@ -7,6 +7,7 @@ export const BarcodeScanner: React.FC<{}> = () => {
   const [paused, setPaused] = useState(false);
 
   const {
+    isDecoding,
     ref,
     torch: {
       on: torchOn,
@@ -36,6 +37,7 @@ export const BarcodeScanner: React.FC<{}> = () => {
         <span>Last result:</span>
         <span>{result}</span>
       </p>
+      <p>isDecoding ? {isDecoding ? "yes" : "no"}</p>
       <div>
         <button onClick={() => setPaused(!paused)}>
           {paused ? "Resume" : "Pause"}
