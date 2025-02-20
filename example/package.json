@@ -4,14 +4,14 @@
   "private": true,
   "dependencies": {
     "react": "link:../node_modules/react",
-    "react-dom": "link:../node_modules/react-dom",
+    "react-dom": "^19.0.0",
     "react-zxing": "link:.."
   },
   "devDependencies": {
     "@types/node": "^16.7.13",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "parcel": "^2.7.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "parcel": "^2.13.3",
     "process": "^0.11.10",
     "typescript": "^4.7.4"
   },
