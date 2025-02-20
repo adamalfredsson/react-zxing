@@ -42,6 +42,7 @@ export const useZxing = (
   const [constraints, setConstraints] = useState(
     "constraints" in options ? options.constraints : undefined
   );
+  const [isDecoding, setIsDecoding] = useState(false);
   const decodeResultHandlerRef = useRef(onDecodeResult);
   const decodeErrorHandlerRef = useRef(onDecodeError);
   const errorHandlerRef = useRef(onError);
@@ -93,6 +94,7 @@ export const useZxing = (
     const mediaStream = ref.current.srcObject as MediaStream;
     const videoTrack = mediaStream.getVideoTracks()[0];
     if (videoTrack) torchInit(videoTrack);
+    setIsDecoding(true);
   }, [reader, deviceId, constraints, paused, decodeCallback, torchInit]);
 
   const stopDecoding = useCallback(() => {
@@ -125,10 +127,12 @@ export const useZxing = (
     startDecoding();
     return () => {
       stopDecoding();
+      setIsDecoding(false);
     };
   }, [startDecoding, stopDecoding]);
 
   return {
+    isDecoding,
     ref,
     torch,
   };
