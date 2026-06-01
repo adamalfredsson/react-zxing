@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "paths": {
+      "react-zxing": ["../src/index.ts"]
+    },
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],

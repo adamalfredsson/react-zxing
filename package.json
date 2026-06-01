@@ -37,14 +37,14 @@
   "scripts": {
     "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
     "build:esm": "tsc",
-    "build:cjs": "tsc --module commonjs --outDir lib/cjs",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
     "lint": "eslint \"{src,example}/**/*.{ts,tsx}\"",
     "lint:fix": "pnpm lint --fix",
     "clean": "git clean -xdf lib example/dist",
-    "dev": "pnpm build && pnpm --filter example start",
+    "dev": "pnpm --filter example start",
     "format": "prettier --write --ignore-path .gitignore .",
     "prepare": "husky install",
-    "type-check": "tsc --noEmit"
+    "typecheck": "tsc --noEmit && pnpm --filter example typecheck"
   },
   "peerDependencies": {
     "react": "^16.8.0  || ^17.0.0 || ^18.0.0 || ^19.0.0"
@@ -64,7 +64,7 @@
     "typescript-eslint": "^8.60.0"
   },
   "dependencies": {
-    "@zxing/library": "^0.23.0"
+    "@zxing/library": "^0.20.0"
   },
   "lint-staged": {
     "*.{tsx,ts,jsx,js}": [
