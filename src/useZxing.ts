@@ -1,19 +1,25 @@
 import {
+  ChecksumException,
   DecodeContinuouslyCallback,
   DecodeHintType,
   Exception,
+  FormatException,
   NotFoundException,
   Result,
 } from "@zxing/library";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { DEFAULT_CONSTRAINTS } from "./constants";
 import { useBrowserMultiFormatReader } from "./useBrowserMultiFormatReader";
 import { useTorch } from "./useTorch";
-import { deepCompareObjects } from "./utils";
+
+const isExpectedDecodeError = (error: Exception) =>
+  error instanceof NotFoundException ||
+  error instanceof ChecksumException ||
+  error instanceof FormatException;
 
 export interface UseZxingOptions {
   paused?: boolean;
-  hints?: Map<DecodeHintType, any>;
+  hints?: Map<DecodeHintType, unknown>;
   timeBetweenDecodingAttempts?: number;
   onDecodeResult?: (result: Result) => void;
   onDecodeError?: (error: Exception) => void;
@@ -40,8 +46,14 @@ export const useZxing = (
     onError = () => {},
   } = options;
   const deviceId = "deviceId" in options ? options.deviceId : undefined;
-  const [constraints, setConstraints] = useState(
-    "constraints" in options ? options.constraints : undefined,
+  const constraintsOption =
+    "constraints" in options ? options.constraints : undefined;
+  const constraintsKey = JSON.stringify(constraintsOption);
+  const constraints = useMemo(
+    () => constraintsOption,
+    // Stabilize inline constraint objects by value, not reference.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- constraintsKey
+    [constraintsKey],
   );
   const decodeResultHandlerRef = useRef(onDecodeResult);
   const decodeErrorHandlerRef = useRef(onDecodeError);
@@ -63,7 +75,7 @@ export const useZxing = (
   const decodeCallback = useCallback<DecodeContinuouslyCallback>(
     (result, error) => {
       if (result) decodeResultHandlerRef.current(result);
-      if (error && !(error instanceof NotFoundException)) {
+      if (error && !isExpectedDecodeError(error)) {
         decodeErrorHandlerRef.current(error);
       }
     },
@@ -113,16 +125,6 @@ export const useZxing = (
   useEffect(() => {
     errorHandlerRef.current = onError;
   }, [onError]);
-
-  useEffect(() => {
-    const isConstraintsValueSame = deepCompareObjects(
-      constraints,
-      (options as UseZxingOptionsWithConstraints).constraints,
-    );
-    if (!isConstraintsValueSame) {
-      setConstraints((options as UseZxingOptionsWithConstraints).constraints);
-    }
-  }, [constraints, options]);
 
   useEffect(() => {
     startDecoding();

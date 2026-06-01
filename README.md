@@ -129,8 +129,8 @@ Torch support is limited to devices that support the `torch` constraint. You can
       <td>function</td>
       <td></td>
       <td>
-        Called when a decode error occurs. NotFoundException (no code in the
-        current frame) is ignored during continuous scanning.
+        Called when a decode error occurs. NotFoundException, ChecksumException,
+        and FormatException are ignored during continuous scanning.
       </td>
     </tr>
     <tr>
