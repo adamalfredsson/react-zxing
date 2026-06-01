@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-06-01
+
+### Changed
+
+- Remove the `engines` field from `package.json`.
+
+### Fixed
+
+- Filter `NotFoundException`, `ChecksumException`, and `FormatException` from `onDecodeError` during continuous scanning — these are expected when no valid barcode is in frame.
+- Stabilize inline `constraints` objects with `useMemo` to avoid unnecessary stream restarts when passing a new object reference with the same values.
+
+## [2.1.0] - 2025-02-20
+
+### Changed
+
+- Add React 19 to peer dependencies.
+
 ## [2.0.0] - 2023-08-17
 
 ### Changed
