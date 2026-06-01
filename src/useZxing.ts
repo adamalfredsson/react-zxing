@@ -29,7 +29,7 @@ export interface UseZxingOptionsWithDeviceId extends UseZxingOptions {
 }
 
 export const useZxing = (
-  options: UseZxingOptionsWithConstraints | UseZxingOptionsWithDeviceId = {}
+  options: UseZxingOptionsWithConstraints | UseZxingOptionsWithDeviceId = {},
 ) => {
   const {
     paused = false,
@@ -41,7 +41,7 @@ export const useZxing = (
   } = options;
   const deviceId = "deviceId" in options ? options.deviceId : undefined;
   const [constraints, setConstraints] = useState(
-    "constraints" in options ? options.constraints : undefined
+    "constraints" in options ? options.constraints : undefined,
   );
   const decodeResultHandlerRef = useRef(onDecodeResult);
   const decodeErrorHandlerRef = useRef(onDecodeError);
@@ -67,7 +67,7 @@ export const useZxing = (
         decodeErrorHandlerRef.current(error);
       }
     },
-    []
+    [],
   );
 
   const startDecoding = useCallback(async () => {
@@ -78,13 +78,13 @@ export const useZxing = (
         await reader.decodeFromVideoDevice(
           deviceId,
           ref.current,
-          decodeCallback
+          decodeCallback,
         );
       } else {
         await reader.decodeFromConstraints(
           constraints ?? DEFAULT_CONSTRAINTS,
           ref.current,
-          decodeCallback
+          decodeCallback,
         );
       }
     } catch (e: unknown) {
@@ -117,7 +117,7 @@ export const useZxing = (
   useEffect(() => {
     const isConstraintsValueSame = deepCompareObjects(
       constraints,
-      (options as UseZxingOptionsWithConstraints).constraints
+      (options as UseZxingOptionsWithConstraints).constraints,
     );
     if (!isConstraintsValueSame) {
       setConstraints((options as UseZxingOptionsWithConstraints).constraints);

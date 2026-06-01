@@ -15,7 +15,7 @@ export const useTorch = ({ resetStream }: UseTorchOptions) => {
     setIsAvailable(
       typeof videoTrack.getCapabilities === "function"
         ? (videoTrack.getCapabilities() as any).torch !== undefined
-        : false
+        : false,
     );
   }, []);
 
