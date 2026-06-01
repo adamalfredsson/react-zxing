@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { DEFAULT_TIME_BETWEEN_DECODING_ATTEMPTS } from "./constants";
 
 interface UseBrowserMultiFormatReaderOptions {
-  hints?: Map<DecodeHintType, any>;
+  hints?: Map<DecodeHintType, unknown>;
   timeBetweenDecodingAttempts?: number;
 }
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useZxing } from "react-zxing";
 
-export const BarcodeScanner: React.FC<{}> = () => {
+export const BarcodeScanner = () => {
   const [result, setResult] = useState("");
   const [count, setCount] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -24,6 +24,9 @@ export const BarcodeScanner: React.FC<{}> = () => {
       console.error(error);
     },
   });
+
+  // eslint-disable-next-line no-console
+  console.log("render");
 
   return (
     <>

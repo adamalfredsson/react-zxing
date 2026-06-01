@@ -30,9 +30,6 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "no-console": "warn",
       "react/react-in-jsx-scope": "off",
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-empty-object-type": "off",
-      "react-hooks/set-state-in-effect": "off",
     },
   },
 );

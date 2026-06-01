@@ -1,2 +1,3 @@
 export { DecodeHintType, Result } from "@zxing/library";
-export { useZxing, UseZxingOptions } from "./useZxing";
+export { useZxing } from "./useZxing";
+export type { UseZxingOptions } from "./useZxing";

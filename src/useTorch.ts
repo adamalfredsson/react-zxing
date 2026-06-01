@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+type MediaTrackCapabilitiesWithTorch = MediaTrackCapabilities & {
+  torch?: boolean;
+};
+
+type TorchMediaTrackConstraintSet = MediaTrackConstraintSet & {
+  torch?: boolean;
+};
+
 interface UseTorchOptions {
   resetStream: () => void;
 }
@@ -14,15 +22,17 @@ export const useTorch = ({ resetStream }: UseTorchOptions) => {
     videoTrackRef.current = videoTrack;
     setIsAvailable(
       typeof videoTrack.getCapabilities === "function"
-        ? (videoTrack.getCapabilities() as any).torch !== undefined
+        ? (videoTrack.getCapabilities() as MediaTrackCapabilitiesWithTorch)
+            .torch !== undefined
         : false,
     );
   }, []);
 
   const on = useCallback(async () => {
     if (!videoTrackRef.current || !isAvailable) return;
+    const torchConstraint: TorchMediaTrackConstraintSet = { torch: true };
     await videoTrackRef.current.applyConstraints({
-      advanced: [{ torch: true } as any],
+      advanced: [torchConstraint],
     });
     setIsOn(true);
   }, [isAvailable]);
