@@ -5,6 +5,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -16,6 +19,6 @@ jobs:
       - name: Install dependencies and build 🔧
         run: pnpm install --frozen-lockfile && pnpm build
       - name: Publish package on NPM 📦
-        run: pnpm publish --no-git-checks
+        run: pnpm publish --no-git-checks --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
