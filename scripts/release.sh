@@ -12,6 +12,13 @@ version=$(npm pkg get version | tr -d '"')
 [ -n "$version" ] || { echo "Could not read version from package.json" >&2; exit 1; }
 VERSION="v$version"
 
+if [ "$retry" != true ]; then
+  grep -qF "## [$version]" CHANGELOG.md || {
+    echo "CHANGELOG.md is missing a section for $version" >&2
+    exit 1
+  }
+fi
+
 git push origin main
 
 if [ "$retry" = true ]; then
