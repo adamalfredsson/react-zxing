@@ -44,6 +44,7 @@
     "dev": "pnpm --filter example start",
     "format": "prettier --write --ignore-path .gitignore .",
     "prepare": "husky install",
+    "release": "bash scripts/release.sh",
     "typecheck": "tsc --noEmit && pnpm --filter example typecheck"
   },
   "peerDependencies": {
