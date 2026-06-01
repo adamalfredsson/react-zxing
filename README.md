@@ -129,10 +129,8 @@ Torch support is limited to devices that support the `torch` constraint. You can
       <td>function</td>
       <td></td>
       <td>
-        Called when an decode error is found. The error is an instance of 
-        <a href="https://github.com/zxing-js/library/blob/master/src/core/Exception.ts">
-          Exception
-        </a>
+        Called when a decode error occurs. NotFoundException (no code in the
+        current frame) is ignored during continuous scanning.
       </td>
     </tr>
     <tr>
@@ -190,13 +188,11 @@ Torch support is limited to devices that support the `torch` constraint. You can
 
 ```sh
 # Install dependencies
-yarn
+pnpm install
 # Build the library
-yarn build
-# Install example dependencies
-yarn --cwd example
+pnpm build
 # Start the example
-yarn --cwd example start
+pnpm dev
 ```
 
-Example should now be running on [localhost:1234](http://localhost:1234).
+Example should now be running on [localhost:5173](http://localhost:5173).
