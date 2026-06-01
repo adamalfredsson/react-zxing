@@ -45,6 +45,7 @@
     "format": "prettier --write --ignore-path .gitignore .",
     "prepare": "husky install",
     "release": "bash scripts/release.sh",
+    "release:retry": "bash scripts/release.sh --retry",
     "typecheck": "tsc --noEmit && pnpm --filter example typecheck"
   },
   "peerDependencies": {
