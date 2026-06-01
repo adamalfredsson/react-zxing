@@ -2,6 +2,7 @@ import {
   DecodeContinuouslyCallback,
   DecodeHintType,
   Exception,
+  NotFoundException,
   Result,
 } from "@zxing/library";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -62,7 +63,9 @@ export const useZxing = (
   const decodeCallback = useCallback<DecodeContinuouslyCallback>(
     (result, error) => {
       if (result) decodeResultHandlerRef.current(result);
-      if (error) decodeErrorHandlerRef.current(error);
+      if (error && !(error instanceof NotFoundException)) {
+        decodeErrorHandlerRef.current(error);
+      }
     },
     []
   );
