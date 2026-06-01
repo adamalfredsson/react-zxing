@@ -1,5 +1,4 @@
 node_modules/
 lib/
-/example/node_modules/
-/example/dist/
-/example/.parcel-cache
+dist/
+example/dist/
