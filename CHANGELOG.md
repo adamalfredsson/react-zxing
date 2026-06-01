@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-06-01
+
+### Changed
+
+- Replace `@zxing/library` with `barcode-detector` backed by ZXing-C++ WebAssembly.
+- Change decode results from `@zxing/library` `Result` objects to Barcode Detection API-style `DetectedBarcode` objects (`rawValue`, `format`, etc.).
+- Replace the `hints` option with `formats`.
+- Change `onDecodeError` to receive `unknown` instead of `@zxing/library` `Exception`.
+- Make skewed-frame retry opt-in via `trySkew` (default angles: `-20`, `-15`, `-10`, `-5`, `5`, `10`, `15`, `20`).
+
+### Added
+
+- Add `prepareWasm()` for preloading or self-hosting `zxing_reader.wasm`.
+- Add `wasmUrl` option to `useZxing` for per-scanner WASM configuration.
+- Add focused unit coverage for scanner lifecycle, torch behavior, media errors, WASM setup, and skewed-frame decoding.
+
+### Fixed
+
+- Allow retrying WASM setup after a failed load and reject conflicting `wasmUrl` configuration.
+- Avoid throwing when skewed-frame canvas contexts are unavailable.
+
+### Migration
+
+- Replace `result.getText()` with `result.rawValue`.
+- Replace `hints` with `formats` (see [barcode-detector](https://www.npmjs.com/package/barcode-detector) for supported values).
+- Enable skewed 1D retry explicitly with `trySkew: true` or a custom angle array.
+- For offline or CSP-restricted apps, call `prepareWasm({ wasmUrl })` or pass `wasmUrl` to `useZxing`.
+
 ## [2.2.0] - 2026-06-01
 
 ### Changed
