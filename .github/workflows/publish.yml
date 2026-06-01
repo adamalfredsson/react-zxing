@@ -16,6 +16,6 @@ jobs:
       - name: Install dependencies and build 🔧
         run: pnpm install --frozen-lockfile && pnpm build
       - name: Publish package on NPM 📦
-        run: pnpm publish
+        run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
