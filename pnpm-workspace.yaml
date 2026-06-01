@@ -1,0 +1,11 @@
+packages:
+  - example
+
+catalog:
+  "@types/react": ^19.0.10
+  react: ^19.0.0
+  react-dom: ^19.0.0
+  typescript: ^5.7.3
+
+allowBuilds:
+  esbuild: true
